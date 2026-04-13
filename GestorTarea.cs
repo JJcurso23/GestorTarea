@@ -1,23 +1,30 @@
 ﻿using System;
 
-public class GestorTarea
+namespace Tareas
 {
-    public List<Tarea> Tareas { get; set; }
-    public GestorTarea()
+    public class GestorTarea
     {
-        Tareas = new List<Tarea>();
-    }
-    public void AgregarTarea(Tarea tarea)
-    {
-        Tareas.Add(tarea);
-    }
-    public void EliminarTarea(Tarea tarea)
-    {
-        Tareas.Remove(tarea);
-    }
-    public List<Tarea> ObtenerTareas()
-    {
-        return Tareas;
-    }
+        public Dictionary<int, Tarea> Tareas { get; set; }
+        public GestorTarea()
+        {
+            Tareas = new Dictionary<int, Tarea>();
+        }
+        public void AgregarTarea(Tarea tarea)
+        {
+            if (!Tareas.ContainsKey(tarea.ID)) {
+                Tareas.Add(tarea.ID, tarea);
+            }
+        }
+        public void EliminarTarea(int id)
+        {
+            Tareas.Remove(id);
+        }
+        public List<Tarea> ObtenerTareas()
+        {
+            return Tareas.Values.ToList();
+        }
 
+    }
 }
+
+

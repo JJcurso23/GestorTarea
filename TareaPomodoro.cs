@@ -1,8 +1,29 @@
 ﻿using System;
 
-public class TareaPomodoro
+namespace Tareas
 {
-	public TareaPomodoro()
-	{
-	}
+    public class TareaPomodoro
+    {
+        public DateTime TiempoFinal { get; set; }
+        public DateTime tiempoInit { get; set }
+        private int _sesiones;
+
+        public TareaPomodoro(string titulo, string description, 
+            DateTime endDay): base(titulo, description, endDay)
+        { }
+
+        public void IniciarTemporizador()
+        {
+            tiempoInit = DateTime.Now;
+            _sesiones++;
+        }
+
+        public int ContarSesiones() => _sesiones;
+
+        public override void ObtenerResumen()
+        {
+            Console.WriteLine($"Pomodoro {titulo} - Sesiones {_sesiones}");
+        }
+    }
 }
+
