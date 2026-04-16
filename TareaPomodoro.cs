@@ -2,14 +2,15 @@
 
 namespace Tareas
 {
-    public class TareaPomodoro
+    public class TareaPomodoro: Tarea
     {
         public DateTime TiempoFinal { get; set; }
-        public DateTime tiempoInit { get; set }
+        public DateTime tiempoInit { get; set; }
         private int _sesiones;
 
         public TareaPomodoro(string titulo, string description, 
-            DateTime endDay): base(titulo, description, endDay)
+            DateTime endDay)
+            : base(titulo, description, endDay)
         { }
 
         public void IniciarTemporizador()

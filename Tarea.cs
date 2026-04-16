@@ -20,17 +20,14 @@ namespace Tareas
         public DateTime InitDay;
         public DateTime Endday;
         private EstadoTarea _estado;
-        private string _motivoCancerlacion;
-        private bool _IsComplete;
+        private string _motivoCancerlacion = "";
+        
         public EstadoTarea Estado
         {
             get
             {
-                if (_IsComplete)
-                {
-                    return EstadoTarea.Completada;
-                }
-                else if (DateTime.Now > Endday)
+                
+                if (DateTime.Now > Endday)
                 {
                     return EstadoTarea.Vencida;
                 }
@@ -66,7 +63,7 @@ namespace Tareas
                 this.Endday = endDay;
                 this.ID = CalcularID(titulo);
                 this._estado = EstadoTarea.Pendiente;
-                this._IsComplete = false;
+                
             }
 
         }
@@ -95,7 +92,7 @@ namespace Tareas
         }
         public bool CompletarTarea()
         {
-            if (_estado == EstadoTarea.Cancelada || _estado == EstadoTarea.Cancelada)
+            if (_estado == EstadoTarea.Cancelada)
             {
                 return false;
             }

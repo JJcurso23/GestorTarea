@@ -8,7 +8,7 @@ namespace Tareas
         public string Responsable;
         public TareaUrgente(string titulo, string descrip,
             DateTime endDay, string responsable)
-            :base(string titulo, string descrip, DateTime endDay )
+            :base( titulo,  descrip, endDay )
         {
             this.Responsable = responsable;
         }
