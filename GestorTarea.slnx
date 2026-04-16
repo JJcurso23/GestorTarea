@@ -1,4 +1,6 @@
 <Solution>
-  <Project Path="../GestorTarea.Tests/GestorTarea.Tests.csproj" Id="763d5534-543f-48c3-bb12-972b19ed1c17" />
+  <Project Path="../GestorTarea.Tests/GestorTarea.Tests.csproj" Id="763d5534-543f-48c3-bb12-972b19ed1c17">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="GestorTarea.csproj" />
 </Solution>
