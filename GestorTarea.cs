@@ -19,6 +19,26 @@ namespace Tareas
             }
             return false;
         }
+        public bool AgregarTarea(TareaSimple tarea)
+        {
+            if (!Tareas.ContainsKey(tarea.ID))
+            {
+                Tareas.Add(tarea.ID, tarea);
+                return true;
+            }
+            return false;
+        }
+
+        public bool AgregarTarea(TareaUrgente tarea)
+        {
+            if (!Tareas.ContainsKey(tarea.ID))
+            {
+                Tareas.Add(tarea.ID, tarea);
+                return true;
+            }
+            return false;
+        }
+
         public void EliminarTarea(int id)
         {
             Tareas.Remove(id);
@@ -38,9 +58,11 @@ namespace Tareas
                 {
                     Id = tarea.ID,
                     Titulo = tarea.titulo,
+                    Description = tarea.Description,
                     FechaLimite = tarea.Endday,
                     Prioridad = 0,
-                    Estado = tarea.Estado.ToString()
+                    Estado = tarea.Estado.ToString(),
+                    UsuarioID = tarea.UsuarioID
                 });
             }
 
@@ -61,6 +83,7 @@ namespace Tareas
                 Tareas = new Dictionary<int, Tarea>();
                 return;
             }
+
             string json = File.ReadAllText(ruta);
             var listaDto = JsonSerializer.Deserialize<List<TareaDTo>>(json);
             Tareas = new Dictionary<int, Tarea>();
@@ -68,8 +91,9 @@ namespace Tareas
             {
                 TareaSimple tarea = new TareaSimple(
                     dto.Titulo,
-                    "",
-                    dto.FechaLimite);
+                    dto.Description,
+                    dto.FechaLimite,
+                    dto.UsuarioID);
 
                 Tareas.Add(tarea.ID, tarea);
             }

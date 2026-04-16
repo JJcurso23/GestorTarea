@@ -7,8 +7,8 @@ namespace Tareas
     {
         public Dictionary<int, Tarea> subtarea { get; set; }
 
-        public TareaConTarea(string titulo, string description, DateTime endDay)
-                : base(titulo, description, endDay)
+        public TareaConTarea(string titulo, string description, DateTime endDay, int usuarioID)
+                : base(titulo, description, endDay, usuarioID)
         {
             subtarea = new Dictionary<int, Tarea>();
         }

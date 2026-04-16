@@ -15,10 +15,11 @@ namespace Tareas
     {
         public string titulo { get; set; }
         public int ID { get; init; }
-        public string Description;
+        public int UsuarioID { get; set; }
+        public string Description { get; set; }
 
         public DateTime InitDay;
-        public DateTime Endday;
+        public DateTime Endday { get; set; }
         private EstadoTarea _estado;
         private string _motivoCancerlacion = "";
         
@@ -43,7 +44,7 @@ namespace Tareas
         }
 
         protected Tarea(string titulo, string description,
-          DateTime endDay)
+          DateTime endDay, int usuarioID)
         {
             if (string.IsNullOrWhiteSpace(titulo))
             {
@@ -63,6 +64,7 @@ namespace Tareas
                 this.Endday = endDay;
                 this.ID = CalcularID(titulo);
                 this._estado = EstadoTarea.Pendiente;
+                this.UsuarioID = usuarioID;
                 
             }
 

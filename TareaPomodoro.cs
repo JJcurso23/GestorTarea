@@ -9,8 +9,8 @@ namespace Tareas
         private int _sesiones;
 
         public TareaPomodoro(string titulo, string description, 
-            DateTime endDay)
-            : base(titulo, description, endDay)
+            DateTime endDay, int usuarioID)
+            : base(titulo, description, endDay, usuarioID)
         { }
 
         public void IniciarTemporizador()
