@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace GestorTarea.Application.DTOs {
-    public class TareaDTo
+    public class TareaDTO
     {
         public int Id { get; set; }
         public required string Titulo { get; set; }

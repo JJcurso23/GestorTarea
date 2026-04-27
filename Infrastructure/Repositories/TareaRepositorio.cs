@@ -11,14 +11,14 @@ namespace GestorTarea.Infrastructure.Repositories
     {
         private readonly string _ruta = "tareas.json";
 
-        public List<TareaDTo> ObtenerTodas()
+        public List<TareaDTO> ObtenerTodas()
         {
-            if (!File.Exists(_ruta)) return new List<TareaDTo>();
+            if (!File.Exists(_ruta)) return new List<TareaDTO>();
             string json = File.ReadAllText(_ruta);
-            return JsonSerializer.Deserialize<List<TareaDTo>>(json);
+            return JsonSerializer.Deserialize<List<TareaDTO>>(json);
         }
 
-        public void Guardar(List<TareaDTo> tareas)
+        public void Guardar(List<TareaDTO> tareas)
         {
             string json = JsonSerializer.Serialize(tareas);
             File.WriteAllText(_ruta, json);

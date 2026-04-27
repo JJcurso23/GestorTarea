@@ -33,11 +33,11 @@ namespace SistemaTareas.GestorTareas.Application.Services
 
         public void Guardar(string ruta)
         {
-            var ListaDto = new List<TareaDTo>();
+            var ListaDto = new List<TareaDTO>();
 
             foreach (var tarea in Tareas.Values)
             {
-                ListaDto.Add(new TareaDTo
+                ListaDto.Add(new TareaDTO
                 {
                     Id = tarea.ID,
                     Titulo = tarea.titulo,
@@ -68,7 +68,7 @@ namespace SistemaTareas.GestorTareas.Application.Services
             }
 
             string json = File.ReadAllText(ruta);
-            var listaDto = JsonSerializer.Deserialize<List<TareaDTo>>(json);
+            var listaDto = JsonSerializer.Deserialize<List<TareaDTO>>(json);
             Tareas = new Dictionary<int, Tarea>();
             foreach(var dto in listaDto)
             {
