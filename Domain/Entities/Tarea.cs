@@ -21,7 +21,7 @@ namespace GestorTarea.Domain.Entities
         public DateTime InitDay;
         public DateTime Endday { get; set; }
         private EstadoTarea _estado;
-        private string _motivoCancerlacion = "";
+        private string _motivoCancelacion = "";
         
         public EstadoTarea Estado
         {
@@ -108,7 +108,7 @@ namespace GestorTarea.Domain.Entities
             if (_estado == EstadoTarea.Cancelada) return false;
 
             _estado = EstadoTarea.Cancelada;
-            _motivoCancerlacion = motivo ?? "Sin motivo especificado";
+            _motivoCancelacion = motivo ?? "Sin motivo especificado";
             return true;
         }
 
