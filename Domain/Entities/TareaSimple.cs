@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Tareas
+namespace GestorTarea.Domain.Entities
 {
     public class TareaSimple : Tarea
     {

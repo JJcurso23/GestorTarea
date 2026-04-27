@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text.Json;
 using System.IO;
+using GestorTarea.Domain.Entities;
+using GestorTarea.Application.DTOs;
 
-namespace Tareas
+namespace GestorTarea.Application.Services
 {
     public class GestorTarea
     {

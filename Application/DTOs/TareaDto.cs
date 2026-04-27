@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tareas {
+namespace GestorTarea.Application.DTOs {
     public class TareaDTo
     {
         public int Id { get; set; }

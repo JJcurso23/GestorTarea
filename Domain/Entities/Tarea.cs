@@ -1,7 +1,7 @@
 ﻿using System;
 using static System.Net.WebRequestMethods;
 
-namespace Tareas
+namespace GestorTarea.Domain.Entities
 {
     public enum EstadoTarea
     {
