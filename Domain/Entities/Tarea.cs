@@ -51,7 +51,7 @@ namespace GestorTarea.Domain.Entities
                 throw new ArgumentException("El título no puede estar vacío o contener solo espacios en blanco."
                 , nameof(titulo));
             }
-            if (endDay.Date < DateTime.Today)
+            if (endDay < DateTime.Now.AddMinutes(-1))
             {
                 throw new ArgumentException(
                     "La fecha limite no puede ser anterior a hoy");

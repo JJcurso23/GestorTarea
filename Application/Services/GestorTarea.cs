@@ -21,25 +21,6 @@ namespace SistemaTareas.GestorTareas.Application.Services
             }
             return false;
         }
-        public bool AgregarTarea(TareaSimple tarea)
-        {
-            if (!Tareas.ContainsKey(tarea.ID))
-            {
-                Tareas.Add(tarea.ID, tarea);
-                return true;
-            }
-            return false;
-        }
-
-        public bool AgregarTarea(TareaUrgente tarea)
-        {
-            if (!Tareas.ContainsKey(tarea.ID))
-            {
-                Tareas.Add(tarea.ID, tarea);
-                return true;
-            }
-            return false;
-        }
 
         public void EliminarTarea(int id)
         {
@@ -82,7 +63,7 @@ namespace SistemaTareas.GestorTareas.Application.Services
         {
             if (!File.Exists(ruta))
             {
-                Tareas = new Dictionary<int, Tarea>();
+                this.Tareas = new Dictionary<int, Tarea>();
                 return;
             }
 

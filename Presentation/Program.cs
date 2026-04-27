@@ -19,7 +19,7 @@ class Program
         TareaSimple tarea1 = new TareaSimple(
             "Estudiar C#",
             "Repasar POO",
-            DateTime.Today.AddDays(3),
+            DateTime.Now.AddDays(3),
             usuarios[1].Id
 
         );
