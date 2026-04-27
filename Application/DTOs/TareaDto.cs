@@ -5,7 +5,7 @@ namespace GestorTarea.Application.DTOs {
     {
         public int Id { get; set; }
         public required string Titulo { get; set; }
-        public required string Description { get; set; }
+        public required string Descripcion { get; set; }
         public DateTime FechaLimite { get; set; }
         public int Prioridad { get; set; }
         public required string Estado { get; set; }
