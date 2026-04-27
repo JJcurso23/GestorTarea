@@ -40,9 +40,9 @@ namespace SistemaTareas.GestorTareas.Application.Services
                 ListaDto.Add(new TareaDTO
                 {
                     Id = tarea.ID,
-                    Titulo = tarea.titulo,
-                    Description = tarea.Description,
-                    FechaLimite = tarea.Endday,
+                    Titulo = tarea.Titulo,
+                    Descripcion = tarea.Descripcion,
+                    FechaLimite = tarea.DiaVencimiento,
                     Prioridad = 0,
                     Estado = tarea.Estado.ToString(),
                     UsuarioID = tarea.UsuarioID
@@ -74,7 +74,7 @@ namespace SistemaTareas.GestorTareas.Application.Services
             {
                 TareaSimple tarea = new TareaSimple(
                     dto.Titulo,
-                    dto.Description,
+                    dto.Descripcion,
                     dto.FechaLimite,
                     dto.UsuarioID);
 
