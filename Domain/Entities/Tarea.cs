@@ -1,25 +1,19 @@
 ﻿using System;
+using GestorTarea.Domain.Enums;
 using static System.Net.WebRequestMethods;
 
 namespace GestorTarea.Domain.Entities
 {
-    public enum EstadoTarea
-    {
-        Pendiente,
-        EnProgreso,
-        Completada,
-        Cancelada,
-        Vencida
-    }
+   
     public abstract class Tarea
     {
-        public string titulo { get; set; }
+        public string Titulo { get; private set; }
         public int ID { get; init; }
-        public int UsuarioID { get; set; }
-        public string Description { get; set; }
+        public int UsuarioID { get; private set; }
+        public string Descripcion { get; set; }
 
-        public DateTime InitDay;
-        public DateTime Endday { get; set; }
+        public DateTime Diainicio;
+        public DateTime DiaVencimiento { get; set; }
         private EstadoTarea _estado;
         private string _motivoCancelacion = "";
         
@@ -28,7 +22,7 @@ namespace GestorTarea.Domain.Entities
             get
             {
                 
-                if (DateTime.Now > Endday)
+                if (DateTime.Now > DiaVencimiento)
                 {
                     return EstadoTarea.Vencida;
                 }
@@ -43,25 +37,25 @@ namespace GestorTarea.Domain.Entities
             }
         }
 
-        protected Tarea(string titulo, string description,
-          DateTime endDay, int usuarioID)
+        protected Tarea(string titulo, string descripcion,
+          DateTime diaVencimiento, int usuarioID)
         {
             if (string.IsNullOrWhiteSpace(titulo))
             {
                 throw new ArgumentException("El título no puede estar vacío o contener solo espacios en blanco."
                 , nameof(titulo));
             }
-            if (endDay < DateTime.Now.AddMinutes(-1))
+            if (diaVencimiento < DateTime.Now.AddMinutes(-1))
             {
                 throw new ArgumentException(
                     "La fecha limite no puede ser anterior a hoy");
             }
             else
             {
-                this.titulo = titulo.Trim(); // Elimina espacios en blanco al inicio y al final del título
-                this.Description = description?.Trim() ?? string.Empty; // Si description es null, se asigna una cadena vacía
-                this.InitDay = DateTime.Now;
-                this.Endday = endDay;
+                this.Titulo = titulo.Trim(); // Elimina espacios en blanco al inicio y al final del título
+                this.Descripcion = descripcion?.Trim() ?? string.Empty; // Si description es null, se asigna una cadena vacía
+                this.Diainicio = DateTime.Now;
+                this.DiaVencimiento = diaVencimiento;
                 this.ID = CalcularID(titulo);
                 this._estado = EstadoTarea.Pendiente;
                 this.UsuarioID = usuarioID;
@@ -74,10 +68,12 @@ namespace GestorTarea.Domain.Entities
             return titulo.GetHashCode();
         }
 
-        public int DiasRestantes => (Endday - DateTime.Now).Days;
+        public int DiasRestantes => (DiaVencimiento - DateTime.Now).Days;
         public bool EstaVencida()
         {
-            if (_estado != EstadoTarea.Completada && DateTime.Now > Endday && _estado != EstadoTarea.Cancelada)
+            if (_estado != EstadoTarea.Completada 
+                && DateTime.Now > DiaVencimiento 
+                && _estado != EstadoTarea.Cancelada)
             {
                 return true;
             }
@@ -89,8 +85,8 @@ namespace GestorTarea.Domain.Entities
 
         public void ActualizarDatos(string descrip, string tituloNuevo)
         {
-            this.Description = descrip;
-            this.titulo = tituloNuevo;
+            this.Descripcion = descrip;
+            this.Titulo = tituloNuevo;
         }
         public bool CompletarTarea()
         {
@@ -115,15 +111,15 @@ namespace GestorTarea.Domain.Entities
         public override string ToString()
         {
             return $"ID: {ID}" +
-            $", Título: {titulo}" +
-            $", Descripción: {Description}" +
-            $", Fecha de Inicio: {InitDay.ToShortDateString()}" +
-            $", Fecha de Fin: {Endday.ToShortDateString()}" +
+            $", Título: {Titulo}" +
+            $", Descripción: {Descripcion}" +
+            $", Fecha de Inicio: {Diainicio.ToShortDateString()}" +
+            $", Fecha de Fin: {DiaVencimiento.ToShortDateString()}" +
             $", Estado: {Estado}";
         }
         public virtual void ObtenerResumen()
         {
-            Console.WriteLine($"ID: {ID} - Título: {titulo} - Estado: {Estado}");
+            Console.WriteLine($"ID: {ID} - Título: {Titulo} - Estado: {Estado}");
         }
     }
 }
