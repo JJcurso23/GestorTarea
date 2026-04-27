@@ -1,12 +1,12 @@
-﻿using System;
-using Tareas;
-using System.Text.Json;
+﻿using System.Text.Json;
+using GestorTarea.Domain.Entities;
+using SistemaTareas.GestorTareas.Application.Services;
 
 class Program
 {
     static void Main(string[] args)
-    {  
-        GestorTarea gestor = new GestorTarea();
+    {
+        GestorTareasService gestor = new GestorTareasService();
         string ruta = "tareas.json";
         string rutaUsuario = "usuarios.json";
         string jsonUsuarios = File.ReadAllText(rutaUsuario);

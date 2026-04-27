@@ -4,12 +4,12 @@ using System.IO;
 using GestorTarea.Domain.Entities;
 using GestorTarea.Application.DTOs;
 
-namespace GestorTarea.Application.Services
+namespace SistemaTareas.GestorTareas.Application.Services
 {
-    public class GestorTarea
+    public class GestorTareasService
     {
         public Dictionary<int, Tarea> Tareas { get; set; }
-        public GestorTarea()
+        public GestorTareasService()
         {
             Tareas = new Dictionary<int, Tarea>();
         }
