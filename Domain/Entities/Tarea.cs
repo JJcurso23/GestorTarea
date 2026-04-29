@@ -7,13 +7,15 @@ namespace GestorTarea.Domain.Entities
    
     public abstract class Tarea
     {
+        
         public string Titulo { get; private set; }
         public int ID { get; init; }
         public int UsuarioID { get; private set; }
-        public string Descripcion { get; set; }
+        public string Descripcion { get; private set; }
 
-        public DateTime Diainicio;
-        public DateTime DiaVencimiento { get; set; }
+        public DateTime Diainicio { get; private set; }
+        public DateTime DiaVencimiento { get; private set; }
+        public string Responsable { get; private set; }
         private EstadoTarea _estado;
         private string _motivoCancelacion = "";
         
@@ -21,7 +23,6 @@ namespace GestorTarea.Domain.Entities
         {
             get
             {
-                
                 if (DateTime.Now > DiaVencimiento)
                 {
                     return EstadoTarea.Vencida;

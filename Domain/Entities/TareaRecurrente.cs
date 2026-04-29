@@ -13,7 +13,11 @@ namespace GestorTarea.Domain.Entities
         }
         public void SiguienteTarea()
         {
-
+            //Todo
+        }
+        public virtual void ObtenerResumen()
+        {
+            Console.WriteLine($"ID: {ID} - Título: {Titulo} - Estado: {Estado} - Cada: {IntervalosenDias}");
         }
     }
 }

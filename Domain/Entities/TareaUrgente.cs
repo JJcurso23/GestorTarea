@@ -7,8 +7,8 @@ namespace GestorTarea.Domain.Entities
 
         public string Responsable;
         public TareaUrgente(string titulo, string descrip,
-            DateTime endDay, int usuarioId, string responsable)
-            :base( titulo,  descrip, endDay, usuarioId)
+            DateTime diaVencimiento, int usuarioId, string responsable)
+            :base( titulo,  descrip, diaVencimiento, usuarioId)
         {
             this.Responsable = responsable;
         }
