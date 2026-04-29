@@ -31,32 +31,42 @@ namespace SistemaTareas.GestorTareas.Application.Services
             return Tareas.Values.ToList();
         }
 
+      
         public void Guardar(string ruta)
         {
-            var ListaDto = new List<TareaDTO>();
+           
+            var listaDto = new List<TareaDTO>();
 
             foreach (var tarea in Tareas.Values)
             {
-                ListaDto.Add(new TareaDTO
+                listaDto.Add(new TareaDTO
                 {
                     Id = tarea.ID,
                     Titulo = tarea.Titulo,
                     Descripcion = tarea.Descripcion,
                     FechaLimite = tarea.DiaVencimiento,
-                    Prioridad = 0,
+                    Prioridad = 0, 
                     Estado = tarea.Estado.ToString(),
                     UsuarioID = tarea.UsuarioID
                 });
             }
 
+            
             var opciones = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
 
-            string json = JsonSerializer.Serialize(ListaDto, opciones);
-            File.WriteAllText(ruta, json);
-
+            try
+            {
+                string json = JsonSerializer.Serialize(listaDto, opciones);
+                File.WriteAllText(ruta, json);
+                Console.WriteLine("¡Datos guardados exitosamente en el JSON!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar en el JSON: {ex.Message}");
+            }
         }
 
         public void Cargar(string ruta)
@@ -64,23 +74,38 @@ namespace SistemaTareas.GestorTareas.Application.Services
             if (!File.Exists(ruta))
             {
                 this.Tareas = new Dictionary<int, Tarea>();
+                Console.WriteLine("No existe un archivo de dato previo.");
                 return;
             }
 
-            string json = File.ReadAllText(ruta);
-            var listaDto = JsonSerializer.Deserialize<List<TareaDTO>>(json);
-            Tareas = new Dictionary<int, Tarea>();
-            foreach(var dto in listaDto)
+            try
             {
-                TareaSimple tarea = new TareaSimple(
-                    dto.Titulo,
-                    dto.Descripcion,
-                    dto.FechaLimite,
-                    dto.UsuarioID);
+                string json = File.ReadAllText(ruta);
+                var opciones = new JsonSerializerOptions {
+                    PropertyNameCaseInsensitive = true };
+                var listaDto = JsonSerializer.Deserialize<List<TareaDTO>>(json);
+                Tareas = new Dictionary<int, Tarea>();
+                foreach (var dto in listaDto)
+                {
+                    TareaSimple tarea = new TareaSimple(
+                        dto.Titulo,
+                        dto.Descripcion,
+                        dto.FechaLimite,
+                        dto.UsuarioID);
 
-                Tareas.Add(tarea.ID, tarea);
+                    if (!Tareas.ContainsKey(tarea.ID))
+                    {
+                        Tareas.Add(tarea.ID, tarea);
+                        // Imprimimos la confirmación de carga
+                        Console.WriteLine($"[Cargada] ID: {tarea.ID} | Título: {tarea.Titulo}");
+                    }
+                }
+                Console.WriteLine("--- Carga completa con exito ---\n");
             }
-
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error critico al cargar datos: {ex.Message}");
+            }
         }
     }
 }

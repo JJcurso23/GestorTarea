@@ -16,20 +16,22 @@ class Program
 
         gestor.Cargar(ruta);
 
-        TareaSimple tarea1 = new TareaSimple(
-            "Estudiar C#",
-            "Repasar POO",
-            DateTime.Now.AddDays(3),
-            usuarios[1].Id
+        Console.WriteLine("Resumen actual del gestos: ");
+        TareaSimple nuevaTarea = new TareaSimple(
+        "Nueva Tarea desde código",
+        "Esta tarea se guardará en el JSON",
+        DateTime.Now.AddDays(5),
+        1 // ID de usuario
+    );
 
-        );
-
-        gestor.AgregarTarea(tarea1);
+        if (gestor.AgregarTarea(nuevaTarea))
+        {
+            Console.WriteLine("Tarea agregada al gestor.");
+        }
 
         foreach (var t in gestor.ObtenerTareas())
         {
             t.ObtenerResumen();
-            t.ToString();
         }
 
         gestor.Guardar(ruta);
