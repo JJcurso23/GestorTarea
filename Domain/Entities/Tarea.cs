@@ -60,7 +60,8 @@ namespace GestorTarea.Domain.Entities
                 this.ID = CalcularID(titulo);
                 this._estado = EstadoTarea.Pendiente;
                 this.UsuarioID = usuarioID;
-                
+                this.Responsable = "Sin asignar";
+
             }
 
         }

@@ -5,7 +5,7 @@ namespace GestorTarea.Domain.Entities
     public class TareaPomodoro: Tarea
     {
         public DateTime TiempoFinal { get; set; }
-        public DateTime tiempoInit { get; set; }
+        public DateTime TiempoInit { get; set; }
         private int _sesiones;
 
         public TareaPomodoro(string titulo, string description, 
@@ -15,7 +15,7 @@ namespace GestorTarea.Domain.Entities
 
         public void IniciarTemporizador()
         {
-            tiempoInit = DateTime.Now;
+            TiempoInit = DateTime.Now;
             _sesiones++;
         }
 
@@ -23,7 +23,7 @@ namespace GestorTarea.Domain.Entities
 
         public override void ObtenerResumen()
         {
-            Console.WriteLine($"Pomodoro {titulo} - Sesiones {_sesiones}");
+            Console.WriteLine($"Pomodoro {Titulo} - Sesiones {_sesiones}");
         }
     }
 }

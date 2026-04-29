@@ -45,7 +45,7 @@ class Program
 
             foreach (var tarea in grupo)
             {
-                Console.WriteLine($"titulo de libros por usuario {grupo.Key}: {tarea.titulo}");
+                Console.WriteLine($"titulo de libros por usuario {grupo.Key}: {tarea.Titulo}");
             }
         }
     }

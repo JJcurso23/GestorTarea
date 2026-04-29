@@ -5,27 +5,27 @@ namespace GestorTarea.Domain.Entities
     
     public class TareaConTarea: Tarea
     {
-        public Dictionary<int, Tarea> subtarea { get; set; }
+        public Dictionary<int, Tarea> Subtareas { get; set; }
 
         public TareaConTarea(string titulo, string description, DateTime endDay, int usuarioID)
                 : base(titulo, description, endDay, usuarioID)
         {
-            subtarea = new Dictionary<int, Tarea>();
+            Subtareas = new Dictionary<int, Tarea>();
         }
 
         public void AgregarSubTarea(Tarea tarea)
         {
-            subtarea.Add(tarea.ID, tarea);
+            Subtareas.Add(tarea.ID, tarea);
         }
         public void EliminarSubtarea(int id)
         {
-            subtarea.Remove(id);
+            Subtareas.Remove(id);
         }
 
         public void MarcarTodasCompletas()
         {
             
-            foreach (var t in subtarea.Values)
+            foreach (var t in Subtareas.Values)
             {
                 t.CompletarTarea();
             }
@@ -33,20 +33,20 @@ namespace GestorTarea.Domain.Entities
 
         public void ObtenerTareasPendientes()
         {
-            var pendientes = subtarea.Values.Where(t => t.Estado == EstadoTarea.Pendiente);
+            var pendientes = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Pendiente);
             foreach (var t in pendientes) t.ObtenerResumen();
         }
 
         public void ObtenerTareasCompletas()
         {
-            var completas = subtarea.Values.Where(t => t.Estado == EstadoTarea.Completada);
+            var completas = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Completada);
             foreach (var t in completas) t.ObtenerResumen();
         }
 
         public override void ObtenerResumen()
         {
             base.ObtenerResumen();
-            Console.WriteLine($"      -> Esta tarea tiene {subtarea.Count} subtareas.");
+            Console.WriteLine($"      -> Esta tarea tiene {Subtareas.Count} subtareas.");
         }
     }
 }
