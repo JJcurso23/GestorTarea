@@ -5,6 +5,8 @@ namespace GestorTarea.Domain.Entities
 {
     public class TareaSimple : Tarea
     {
+
+        protected TareaSimple() : base() { }
         public TareaSimple(string titulo, string description, DateTime endDay, int usuarioID)
             : base(titulo, description, endDay, usuarioID)
         {

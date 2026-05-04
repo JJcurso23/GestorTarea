@@ -8,6 +8,7 @@ namespace GestorTarea.Domain.Entities
         public DateTime TiempoInit { get; set; }
         private int _sesiones;
 
+        protected TareaPomodoro() : base() { }
         public TareaPomodoro(string titulo, string description, 
             DateTime endDay, int usuarioID)
             : base(titulo, description, endDay, usuarioID)

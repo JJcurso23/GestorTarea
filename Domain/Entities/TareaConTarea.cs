@@ -7,12 +7,14 @@ namespace GestorTarea.Domain.Entities
     {
         public Dictionary<int, Tarea> Subtareas { get; set; }
 
-        public TareaConTarea(string titulo, string description, DateTime endDay, int usuarioID)
-                : base(titulo, description, endDay, usuarioID)
+
+        public TareaConTarea(string titulo, string descripcion, DateTime fechaLimite, int usuarioId)
+                : base(titulo, descripcion, fechaLimite, usuarioId)
         {
             Subtareas = new Dictionary<int, Tarea>();
         }
 
+        protected TareaConTarea() { }
         public void AgregarSubTarea(Tarea tarea)
         {
             Subtareas.Add(tarea.ID, tarea);

@@ -6,6 +6,7 @@ namespace GestorTarea.Domain.Entities
     {
         public List<string> IntervalosEnDias { get; set; }
 
+        protected TareaRecurrente() : base() { }
         public TareaRecurrente(string titulo, string descrip, int usuarioID,
             DateTime endDay, List<string> intervalosDias)
             : base(titulo, descrip, endDay, usuarioID)

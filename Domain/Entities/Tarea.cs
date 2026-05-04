@@ -19,6 +19,7 @@ namespace GestorTarea.Domain.Entities
         private EstadoTarea _estado;
         private string _motivoCancelacion = "";
         
+        
         public EstadoTarea Estado
         {
             get
@@ -37,6 +38,7 @@ namespace GestorTarea.Domain.Entities
                 _estado = value;
             }
         }
+        protected Tarea() { }
 
         protected Tarea(string titulo, string descripcion,
           DateTime diaVencimiento, int usuarioID)
@@ -57,7 +59,6 @@ namespace GestorTarea.Domain.Entities
                 this.Descripcion = descripcion?.Trim() ?? string.Empty; // Si description es null, se asigna una cadena vacía
                 this.Diainicio = DateTime.Now;
                 this.DiaVencimiento = diaVencimiento;
-                this.ID = CalcularID(titulo);
                 this._estado = EstadoTarea.Pendiente;
                 this.UsuarioID = usuarioID;
                 this.Responsable = "Sin asignar";
@@ -65,10 +66,7 @@ namespace GestorTarea.Domain.Entities
             }
 
         }
-        public static int CalcularID(string titulo)
-        {
-            return titulo.GetHashCode();
-        }
+        
 
         public int DiasRestantes => (DiaVencimiento - DateTime.Now).Days;
         public bool EstaVencida()
