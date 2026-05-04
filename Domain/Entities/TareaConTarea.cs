@@ -5,51 +5,51 @@ namespace GestorTarea.Domain.Entities
     
     public class TareaConTarea: Tarea
     {
-        public Dictionary<int, Tarea> Subtareas { get; set; }
+        public int TareaDependienteID { get; private set; }
+        public string? InstruccionesDependencia { get; private set; }
 
-
-        public TareaConTarea(string titulo, string descripcion, DateTime fechaLimite, int usuarioId)
-                : base(titulo, descripcion, fechaLimite, usuarioId)
+        public TareaConTarea(string titulo, string descripcion, DateTime diaVencimiento, int usuarioID, int tareaDependienteID)
+            : base(titulo, descripcion, diaVencimiento, usuarioID)
         {
-            Subtareas = new Dictionary<int, Tarea>();
+            this.TareaDependienteID = tareaDependienteID;
         }
 
-        protected TareaConTarea() { }
-        public void AgregarSubTarea(Tarea tarea)
-        {
-            Subtareas.Add(tarea.ID, tarea);
-        }
-        public void EliminarSubtarea(int id)
-        {
-            Subtareas.Remove(id);
-        }
+        //protected TareaConTarea() : base() { }
+        //public void AgregarSubTarea(Tarea tarea)
+        //{
+        //    Subtareas.Add(tarea.ID, tarea);
+        //}
+        //public void EliminarSubtarea(int id)
+        //{
+        //    Subtareas.Remove(id);
+        //}
 
-        public void MarcarTodasCompletas()
-        {
-            
-            foreach (var t in Subtareas.Values)
-            {
-                t.CompletarTarea();
-            }
-        }
+        //public void MarcarTodasCompletas()
+        //{
 
-        public void ObtenerTareasPendientes()
-        {
-            var pendientes = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Pendiente);
-            foreach (var t in pendientes) t.ObtenerResumen();
-        }
+        //    foreach (var t in Subtareas.Values)
+        //    {
+        //        t.CompletarTarea();
+        //    }
+        //}
 
-        public void ObtenerTareasCompletas()
-        {
-            var completas = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Completada);
-            foreach (var t in completas) t.ObtenerResumen();
-        }
+        //public void ObtenerTareasPendientes()
+        //{
+        //    var pendientes = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Pendiente);
+        //    foreach (var t in pendientes) t.ObtenerResumen();
+        //}
 
-        public override void ObtenerResumen()
-        {
-            base.ObtenerResumen();
-            Console.WriteLine($"      -> Esta tarea tiene {Subtareas.Count} subtareas.");
-        }
+        //public void ObtenerTareasCompletas()
+        //{
+        //    var completas = Subtareas.Values.Where(t => t.Estado == Enums.EstadoTarea.Completada);
+        //    foreach (var t in completas) t.ObtenerResumen();
+        //}
+
+        //public override void ObtenerResumen()
+        //{
+        //    base.ObtenerResumen();
+        //    Console.WriteLine($"      -> Esta tarea tiene {Subtareas.Count} subtareas.");
+        //}
     }
 }
 
