@@ -5,8 +5,8 @@ namespace GestorTarea.Domain.Entities
     
     public class TareaConTarea: Tarea
     {
-        public int TareaDependienteID { get; private set; }
-        public string? InstruccionesDependencia { get; private set; }
+        public int TareaDependienteID { get; protected set; }
+        public string? InstruccionesDependencia { get; protected set; }
 
         public TareaConTarea(string titulo, string descripcion, DateTime diaVencimiento, int usuarioID, int tareaDependienteID)
             : base(titulo, descripcion, diaVencimiento, usuarioID)
@@ -14,7 +14,7 @@ namespace GestorTarea.Domain.Entities
             this.TareaDependienteID = tareaDependienteID;
         }
 
-        //protected TareaConTarea() : base() { }
+        protected TareaConTarea() : base() { }
         //public void AgregarSubTarea(Tarea tarea)
         //{
         //    Subtareas.Add(tarea.ID, tarea);
