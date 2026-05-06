@@ -41,13 +41,13 @@ namespace SistemaTareas.GestorTareas.Application.Services
             {
                 listaDto.Add(new TareaDTO
                 {
-                    Id = tarea.ID,
+                   
                     Titulo = tarea.Titulo,
                     Descripcion = tarea.Descripcion,
                     FechaLimite = tarea.DiaVencimiento,
-                    Prioridad = 0, 
                     Estado = tarea.Estado.ToString(),
-                    UsuarioID = tarea.UsuarioID
+                    UsuarioID = tarea.UsuarioID,
+                    TipoTarea = tarea is TareaConTarea ? "Dependiente" : "Simple"
                 });
             }
 
