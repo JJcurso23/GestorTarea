@@ -17,11 +17,13 @@ namespace GestorTarea.Application.Services
             _repositorio = repositorio;
         }
 
-        public List<TareaDTO> ObtenerTareas()
+        public PaginadoResponseDto <TareaResponseDTO> ObtenerPaginadas(int pagina, int porPagina, string? estado)
         {
-            var tareas = _repositorio.ObtenerTodas();
-            return tareas.Select(tarea => new TareaDTO
+            var paginado = _repositorio.ObtenerPaginadas(pagina, porPagina, estado);
+
+            var listaMapeada = paginado.Item1.Select(tarea => new TareaResponseDTO
             {
+                Id = tarea.ID,
                 Titulo = tarea.Titulo,
                 Descripcion = tarea.Descripcion,
                 FechaLimite = tarea.DiaVencimiento,
@@ -29,6 +31,71 @@ namespace GestorTarea.Application.Services
                 UsuarioID = tarea.UsuarioID,
                 TipoTarea = tarea.GetType().Name
             }).ToList();
+
+            return new PaginadoResponseDto<TareaResponseDTO>
+            {
+                Items = listaMapeada, // Aquí metemos la lista que acabamos de transformar
+                NumerodeTarea = paginado.Item2, // El conteo que viene del repositorio
+                PaginaActual = pagina,
+                PaginaTotal = (int)Math.Ceiling(paginado.Item2 / (double)porPagina) // La fórmula matemática
+
+            };
+        }
+
+        public List<TareaResponseDTO> ObtenerTareas()
+        {
+            var tareas = _repositorio.ObtenerTodas();
+            return tareas.Select(tarea => new TareaResponseDTO
+            {
+                Id = tarea.ID,
+                Titulo = tarea.Titulo,
+                Descripcion = tarea.Descripcion,
+                FechaLimite = tarea.DiaVencimiento,
+                Estado = tarea.Estado.ToString(),
+                UsuarioID = tarea.UsuarioID,
+                TipoTarea = tarea.GetType().Name
+            }).ToList();
+        }
+
+        public TareaResponseDTO? ObtenerTareaPorId(int id)
+        {
+            var tarea = _repositorio.ObtenerPorId(id);
+            if (tarea == null) return null;
+
+            return new TareaResponseDTO
+            {
+                Id = tarea.ID,
+                Titulo = tarea.Titulo,
+                Descripcion = tarea.Descripcion,
+                FechaLimite = tarea.DiaVencimiento,
+                Estado = tarea.Estado.ToString(),
+                UsuarioID = tarea.UsuarioID,
+                TipoTarea = tarea.GetType().Name
+            };
+
+        }
+
+        public bool EliminarTarea(int id)
+        {
+            var tarea = _repositorio.ObtenerPorId(id);
+            if (tarea == null) return false;
+
+            _repositorio.Eliminar(tarea);
+            return true;
+        }
+
+        public bool ActualizarTarea(int id, TareaDTO dto)
+        {
+            var tareaExistente = _repositorio.ObtenerPorId(id);
+            if (tareaExistente == null) return false;
+
+            tareaExistente.ActualizarDatosCompletos(
+                dto.Titulo,
+                dto.Descripcion ?? "",
+                dto.FechaLimite);
+
+            _repositorio.Actualizar(tareaExistente);
+            return true;
         }
         public bool AgregarTareaDesdeDTO(TareaDTO dto)
         {
@@ -52,7 +119,7 @@ namespace GestorTarea.Application.Services
                     throw new ArgumentException("Tipo de tarea no válido");
             }
 
-            // falta mapear el estado y otros campos
+            
 
             _repositorio.Agregar(nuevaTarea);
             return true;

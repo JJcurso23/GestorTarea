@@ -83,10 +83,16 @@ namespace GestorTarea.Domain.Entities
         public void IniciarTarea() => Estado = EstadoTarea.EnProgreso;
         public void ReabrirTarea() => Estado = EstadoTarea.Pendiente;
 
-        public void ActualizarDatos(string descrip, string tituloNuevo)
+        public void ActualizarDatosCompletos(string titulo,
+            string descrip, DateTime nuevaFecha)
         {
-            this.Descripcion = descrip;
-            this.Titulo = tituloNuevo;
+            if (string.IsNullOrWhiteSpace(titulo)) 
+                throw new ArgumentException("El titulo es obligatorio");
+
+            this.Titulo = titulo;
+            this.Descripcion = descrip.Trim();
+            this.DiaVencimiento = nuevaFecha;
+
         }
         public bool CompletarTarea()
         {

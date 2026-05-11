@@ -26,5 +26,40 @@ namespace GestorTarea.Infrastructure.Repositories
             _context.Tareas.Add(tarea);
             _context.SaveChanges();
         }
+        public Tarea? ObtenerPorId(int id)
+        {
+            return _context.Tareas.Find(id);
+        }
+        public void Actualizar(Tarea tarea)
+        {
+            _context.Tareas.Update(tarea);
+            _context.SaveChanges();
+        }
+        public void Eliminar(Tarea tarea)
+        {
+            _context.Tareas.Remove(tarea);
+            _context.SaveChanges();
+        }
+
+        public (List<Tarea>, int) ObtenerPaginadas(int pagina, int porPagina, string? estado)
+        {
+            var consulta = _context.Tareas.AsQueryable();
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                consulta = consulta.Where(t => t.Estado.ToString() == estado);
+            }
+
+            int totalRegistros = consulta.Count();
+
+            var resultadoFinal = consulta
+                .OrderBy(t => t.ID)
+                .Skip((pagina -1)*porPagina)
+                .Take(porPagina)
+                .ToList();
+
+            return (resultadoFinal, totalRegistros);
+
+        }
     }
 }
