@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GestorTarea.Domain.Entities
 {
@@ -12,6 +13,7 @@ namespace GestorTarea.Domain.Entities
 
         protected Usuario() { }
 
+        [SetsRequiredMembers]
         public Usuario(string nombre, string email, int edad, bool activo) {
             this.Nombre = nombre;
             this.Email = email;
