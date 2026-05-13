@@ -23,12 +23,29 @@ namespace GestorTarea.Application.Services
                 Nombre = usuario.Nombre,
                 Email = usuario.Email,
                 Edad = usuario.Edad,
-                Activo = usuario.Activo
+                Activo = usuario.Activo,
+                Password = usuario.PasswordHash
+            };
+        }
+        public UsuarioDTO ObtenerPorEmail(string email)
+        {
+            var usuario = _repositorio.ObtenerPorEmail(email);
+            if (usuario == null) return null;
+
+            return new UsuarioDTO
+            {
+                Nombre = usuario.Nombre,
+                Email = usuario.Email,
+                Edad = usuario.Edad,
+                Activo = usuario.Activo,
+                Password = usuario.PasswordHash
             };
         }
         public Usuario CrearUsuario(UsuarioDTO dto)
         {
-            var nuevoUsuario = new Usuario(dto.Nombre, dto.Email, dto.Edad, dto.Activo);
+            string hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+            var nuevoUsuario = new Usuario(dto.Nombre, dto.Email, dto.Edad, hash, dto.Activo);
             _repositorio.Agregar(nuevoUsuario);
             return nuevoUsuario;
         }

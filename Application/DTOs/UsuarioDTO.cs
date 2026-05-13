@@ -4,7 +4,9 @@
     {
         public required string Nombre { get; set; }
         public required string Email { get; set; }
+        public required string Password { get; set; }
         public int Edad { get; set; }
+        
         public bool Activo { get; set; } = true;
     }
 }
