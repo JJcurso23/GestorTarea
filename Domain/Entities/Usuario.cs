@@ -11,7 +11,7 @@ namespace GestorTarea.Domain.Entities
         public int Edad { get; set; }
         public bool Activo { get; set; }
         public string PasswordHash { get; set; }
-        protected Usuario() { }
+        public Usuario() { }
 
         [SetsRequiredMembers]
         public Usuario(string nombre, string email, int edad,string passwordhash, bool activo) {
