@@ -56,6 +56,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 // --------
+
+//Politica de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:5500")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+//----
 var app = builder.Build();
 
 // PARTE 2: configurar el pipeline de peticiones
@@ -64,6 +76,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("FrontendDev");
+
+app.UseMiddleware<GestorTarea.Middlewares.ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
