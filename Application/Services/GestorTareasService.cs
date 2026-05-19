@@ -11,10 +11,12 @@ namespace GestorTarea.Application.Services
     public class GestorTareasService
     {
         private readonly ITareaRepositorio _repositorio;
+        private readonly ILogger _logger;
 
-        public GestorTareasService(ITareaRepositorio repositorio)
+        public GestorTareasService(ITareaRepositorio repositorio, ILogger logger)
         {
             _repositorio = repositorio;
+            _logger = logger;
         }
 
         public PaginadoResponseDto <TareaResponseDTO> ObtenerPaginadas(int pagina, int porPagina, string? estado)
@@ -44,6 +46,7 @@ namespace GestorTarea.Application.Services
 
         public List<TareaResponseDTO> ObtenerTareas()
         {
+            
             var tareas = _repositorio.ObtenerTodas();
             return tareas.Select(tarea => new TareaResponseDTO
             {
@@ -99,6 +102,15 @@ namespace GestorTarea.Application.Services
         }
         public bool AgregarTareaDesdeDTO(TareaDTO dto)
         {
+            _logger.LogInformation(
+                "Creando tarea con titulo: {Titulo} para usuario {UsuarioId}",
+                dto.Titulo, dto.UsuarioID);
+
+            if (string.IsNullOrWhiteSpace(dto.Titulo))
+            {
+                _logger.LogWarning("Intento de crear tarea con titulo vacio");
+                throw new ArgumentException("El titulo no puede estar vacio");
+            }
             Tarea nuevaTarea;
 
             switch (dto.TipoTarea.ToLower())
@@ -122,6 +134,8 @@ namespace GestorTarea.Application.Services
             
 
             _repositorio.Agregar(nuevaTarea);
+
+            _logger.LogInformation($"Tarea creada con Id: {nuevaTarea.ID}");
             return true;
         }
     }

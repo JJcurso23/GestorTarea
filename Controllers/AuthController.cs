@@ -17,6 +17,11 @@ namespace GestorTarea.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// "Registrar nuevo Usuario"
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("registro")]
         [AllowAnonymous]
         public IActionResult Registro([FromBody] RegistroDTO dto)
@@ -26,6 +31,12 @@ namespace GestorTarea.Controllers
                 return Conflict("El email ya esta registrado");
             return Ok(resultado);
         }
+
+        /// <summary>
+        /// "Conectarse"
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public IActionResult Login(LoginDTO dto)
         {

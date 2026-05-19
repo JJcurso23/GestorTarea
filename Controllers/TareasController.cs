@@ -35,7 +35,12 @@ namespace GestorTarea.Controllers
             return Ok(resultadoPaginado);
         }
 
-        // POST: /api/tareas
+        // GET: /api/tareas
+        /// <summary>
+        /// "Crear nueva tarea"
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Create([FromBody] TareaDTO dto)
         {
@@ -56,6 +61,11 @@ namespace GestorTarea.Controllers
 
         }
 
+        /// <summary>
+        /// "Obtener una tarea por Id"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -64,6 +74,12 @@ namespace GestorTarea.Controllers
             return Ok(tarea);
         }
 
+        /// <summary>
+        /// "Actualizar Tarea"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] TareaDTO dto)
         {
@@ -71,6 +87,12 @@ namespace GestorTarea.Controllers
             if (!actualizada) return NotFound(new { mensaje = "Tarea no encontrada para actualizar" });
             return Ok(new { mensaje = "Tarea actualizada correctamente" });
         }
+
+        /// <summary>
+        /// "Eliminar Tarea"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
