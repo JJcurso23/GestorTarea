@@ -11,9 +11,9 @@ namespace GestorTarea.Application.Services
     public class GestorTareasService
     {
         private readonly ITareaRepositorio _repositorio;
-        private readonly ILogger _logger;
+        private readonly ILogger<GestorTareasService> _logger;
 
-        public GestorTareasService(ITareaRepositorio repositorio, ILogger logger)
+        public GestorTareasService(ITareaRepositorio repositorio, ILogger<GestorTareasService> logger)
         {
             _repositorio = repositorio;
             _logger = logger;

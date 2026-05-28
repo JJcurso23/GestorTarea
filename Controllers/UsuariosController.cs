@@ -20,7 +20,7 @@ namespace GestorTarea.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
             var usuario = _servicio.ObtenerUsuarioId(id);
@@ -45,7 +45,7 @@ namespace GestorTarea.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpGet("{email}")]
+        [HttpGet("buscar/{email}")]
         public IActionResult GetByEmail(string email)
         {
             var usuario = _servicio.ObtenerPorEmail(email);
