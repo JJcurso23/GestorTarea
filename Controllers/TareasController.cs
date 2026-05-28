@@ -1,7 +1,9 @@
 ﻿using GestorTarea.Application.DTOs;
 using GestorTarea.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 
 
 
@@ -41,11 +43,18 @@ namespace GestorTarea.Controllers
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public IActionResult Create([FromBody] TareaDTO dto)
         {
             try
             {
+                var usuarioId = int.Parse(
+                   User.FindFirst(ClaimTypes.NameIdentifier)!.Value
+                );
+
+                Console.WriteLine(usuarioId);
+                dto.UsuarioID = usuarioId;
                 _servicio.AgregarTareaDesdeDTO(dto);
                 return Ok("Tarea creada correctamente");
             }

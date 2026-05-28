@@ -70,6 +70,7 @@ namespace GestorTarea.Application.Services
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: expiracion,
                 signingCredentials: credenciales);
