@@ -1,26 +1,39 @@
-﻿using System;
+using System;
 
 namespace GestorTarea.Domain.Entities
 {
     public class TareaRecurrente : Tarea
     {
-        public List<string> IntervalosEnDias { get; set; }
+        /// <summary>Cada cuántos días debe regenerarse la tarea cuando se complete.</summary>
+        public int IntervaloDias { get; set; } = 1;
 
         protected TareaRecurrente() : base() { }
+
         public TareaRecurrente(string titulo, string descrip, DateTime endDay,
-            int usuarioID, List<string> intervalosDias)
+            int usuarioID, int intervaloDias)
             : base(titulo, descrip, endDay, usuarioID)
         {
-            this.IntervalosEnDias = intervalosDias;
+            if (intervaloDias < 1) intervaloDias = 1;
+            IntervaloDias = intervaloDias;
         }
-        public void SiguienteTarea()
+
+        /// <summary>
+        /// Crea la siguiente instancia de la tarea recurrente con la fecha
+        /// limite empujada IntervaloDias dias en el futuro desde hoy.
+        /// </summary>
+        public TareaRecurrente GenerarSiguiente()
         {
-            //Todo
+            return new TareaRecurrente(
+                Titulo,
+                Descripcion,
+                DateTime.Now.AddDays(IntervaloDias),
+                UsuarioID,
+                IntervaloDias);
         }
+
         public override void ObtenerResumen()
         {
-            Console.WriteLine($"ID: {ID} - Título: {Titulo} - Estado: {Estado} - Cada: {IntervalosEnDias}");
+            Console.WriteLine($"ID: {ID} - Título: {Titulo} - Estado: {Estado} - Cada {IntervaloDias} días");
         }
     }
 }
-

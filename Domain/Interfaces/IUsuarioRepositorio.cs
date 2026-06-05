@@ -10,5 +10,8 @@ namespace GestorTarea.Domain.Interfaces
 
         public Usuario? ObtenerPorEmail(string email);
         public void Agregar(Usuario usuario);
+
+        /// <summary>Devuelve un diccionario {usuarioId -> nombre} para los ids pedidos.</summary>
+        public Dictionary<int, string> ObtenerNombresPorIds(IEnumerable<int> ids);
     }
 }

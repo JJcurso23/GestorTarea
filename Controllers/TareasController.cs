@@ -105,6 +105,38 @@ namespace GestorTarea.Controllers
         }
 
         /// <summary>
+        /// "Iniciar una sesion de Pomodoro: marca TiempoInit/TiempoFinal en la tarea"
+        /// </summary>
+        [HttpPost("{id}/pomodoro/iniciar")]
+        public IActionResult IniciarPomodoro(int id)
+        {
+            var resultado = _servicio.IniciarPomodoro(id, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Pomodoro iniciado" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+
+        /// <summary>
+        /// "Registrar una sesion de Pomodoro como completada (incrementa contador)"
+        /// </summary>
+        [HttpPost("{id}/pomodoro/completar-sesion")]
+        public IActionResult CompletarSesionPomodoro(int id)
+        {
+            var resultado = _servicio.CompletarSesionPomodoro(id, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Sesion registrada" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+
+        /// <summary>
         /// "Reabrir una tarea (vuelve a Pendiente)"
         /// </summary>
         [HttpPost("{id}/reabrir")]

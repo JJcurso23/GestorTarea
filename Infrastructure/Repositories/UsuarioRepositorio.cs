@@ -23,5 +23,13 @@ namespace GestorTarea.Infrastructure.Repositories
         {
             return _context.Usuarios.FirstOrDefault(u => u.Email == email);
         }
+
+        public Dictionary<int, string> ObtenerNombresPorIds(IEnumerable<int> ids)
+        {
+            var idsUnicos = ids.Distinct().ToList();
+            return _context.Usuarios
+                .Where(u => idsUnicos.Contains(u.Id))
+                .ToDictionary(u => u.Id, u => u.Nombre);
+        }
     }
 }
