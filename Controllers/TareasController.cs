@@ -1,4 +1,4 @@
-﻿using GestorTarea.Application.DTOs;
+using GestorTarea.Application.DTOs;
 using GestorTarea.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,7 @@ using System.Security.Claims;
 namespace GestorTarea.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class TareasController : ControllerBase
     {
@@ -20,41 +21,33 @@ namespace GestorTarea.Controllers
             _servicio = servicio;
         }
 
-        // GET: /api/tareas
+        private int UsuarioActualId =>
+            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        private bool EsAdmin =>
+            User.IsInRole("Admin");
+
         /// <summary>
-        /// "Obtiene una lista paginada y filtrada de tareas".
+        /// "Obtiene una lista paginada y filtrada de tareas. Admin ve todas, usuario solo las suyas".
         /// </summary>
-        /// <param name="pagina"></param>
-        /// <param name="porPagina"></param>
-        /// <param name="estado"></param>
-        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type =
             typeof(PaginadoResponseDto<TareaResponseDTO>))]
         public IActionResult GetAll([FromQuery] int pagina = 1, [FromQuery] int porPagina = 5, [FromQuery] string? estado = null)
         {
-            var resultadoPaginado = _servicio.ObtenerPaginadas(pagina, porPagina, estado);
+            var resultadoPaginado = _servicio.ObtenerPaginadas(pagina, porPagina, estado, UsuarioActualId, EsAdmin);
             return Ok(resultadoPaginado);
         }
 
-        // GET: /api/tareas
         /// <summary>
         /// "Crear nueva tarea"
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public IActionResult Create([FromBody] TareaDTO dto)
         {
             try
             {
-                var usuarioId = int.Parse(
-                   User.FindFirst(ClaimTypes.NameIdentifier)!.Value
-                );
-
-                Console.WriteLine(usuarioId);
-                dto.UsuarioID = usuarioId;
+                dto.UsuarioID = UsuarioActualId;
                 _servicio.AgregarTareaDesdeDTO(dto);
                 return Ok("Tarea creada correctamente");
             }
@@ -64,50 +57,101 @@ namespace GestorTarea.Controllers
             }
             catch (Exception ex)
             {
-                string err = "Error interno del servidor: ";
-                return StatusCode(500, new { error = err + ex.Message });
+                return StatusCode(500, new { error = "Error interno del servidor: " + ex.Message });
             }
-
         }
 
         /// <summary>
         /// "Obtener una tarea por Id"
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var tarea = _servicio.ObtenerTareaPorId(id);
-            if (tarea == null) return NotFound(new { mensaje = "tarea no encontrada" });
+            var tarea = _servicio.ObtenerTareaPorId(id, UsuarioActualId, EsAdmin);
+            if (tarea == null) return NotFound(new { mensaje = "Tarea no encontrada" });
             return Ok(tarea);
         }
 
         /// <summary>
         /// "Actualizar Tarea"
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] TareaDTO dto)
         {
-            var actualizada = _servicio.ActualizarTarea(id, dto);
-            if (!actualizada) return NotFound(new { mensaje = "Tarea no encontrada para actualizar" });
-            return Ok(new { mensaje = "Tarea actualizada correctamente" });
+            var resultado = _servicio.ActualizarTarea(id, dto, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Tarea actualizada correctamente" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+
+        /// <summary>
+        /// "Marcar tarea como completada"
+        /// </summary>
+        [HttpPost("{id}/completar")]
+        public IActionResult Completar(int id)
+        {
+            var resultado = _servicio.CompletarTarea(id, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Tarea completada" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+
+        /// <summary>
+        /// "Reabrir una tarea (vuelve a Pendiente)"
+        /// </summary>
+        [HttpPost("{id}/reabrir")]
+        public IActionResult Reabrir(int id)
+        {
+            var resultado = _servicio.ReabrirTarea(id, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Tarea reabierta" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
+        }
+
+        public class CancelarDto { public string? Motivo { get; set; } }
+
+        /// <summary>
+        /// "Descartar tarea (pasa a Cancelada)"
+        /// </summary>
+        [HttpPost("{id}/cancelar")]
+        public IActionResult Cancelar(int id, [FromBody] CancelarDto? dto)
+        {
+            var resultado = _servicio.CancelarTarea(id, dto?.Motivo, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Tarea cancelada" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
         }
 
         /// <summary>
         /// "Eliminar Tarea"
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var eliminada = _servicio.EliminarTarea(id);
-            if (!eliminada) return NotFound(new { mensaje = "Tara no encontrada para eliminar" });
-            return Ok(new { mensaje = "Tarea eliminada correctamente" });
+            var resultado = _servicio.EliminarTarea(id, UsuarioActualId, EsAdmin);
+            return resultado switch
+            {
+                GestorTareasService.ResultadoOperacion.Ok => Ok(new { mensaje = "Tarea eliminada correctamente" }),
+                GestorTareasService.ResultadoOperacion.NoEncontrada => NotFound(new { mensaje = "Tarea no encontrada" }),
+                GestorTareasService.ResultadoOperacion.Prohibida => Forbid(),
+                _ => StatusCode(500)
+            };
         }
     }
 }

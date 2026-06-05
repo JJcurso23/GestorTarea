@@ -19,9 +19,11 @@ namespace GestorTarea.Application.Services
             _logger = logger;
         }
 
-        public PaginadoResponseDto <TareaResponseDTO> ObtenerPaginadas(int pagina, int porPagina, string? estado)
+        public PaginadoResponseDto <TareaResponseDTO> ObtenerPaginadas(int pagina, int porPagina, string? estado, int usuarioId, bool esAdmin)
         {
-            var paginado = _repositorio.ObtenerPaginadas(pagina, porPagina, estado);
+            var paginado = esAdmin
+                ? _repositorio.ObtenerPaginadas(pagina, porPagina, estado)
+                : _repositorio.ObtenerPaginadasPorUsuario(pagina, porPagina, estado, usuarioId);
 
             var listaMapeada = paginado.Item1.Select(tarea => new TareaResponseDTO
             {
@@ -60,10 +62,11 @@ namespace GestorTarea.Application.Services
             }).ToList();
         }
 
-        public TareaResponseDTO? ObtenerTareaPorId(int id)
+        public TareaResponseDTO? ObtenerTareaPorId(int id, int usuarioId, bool esAdmin)
         {
             var tarea = _repositorio.ObtenerPorId(id);
             if (tarea == null) return null;
+            if (!esAdmin && tarea.UsuarioID != usuarioId) return null;
 
             return new TareaResponseDTO
             {
@@ -78,19 +81,60 @@ namespace GestorTarea.Application.Services
 
         }
 
-        public bool EliminarTarea(int id)
+        public enum ResultadoOperacion { Ok, NoEncontrada, Prohibida }
+
+        public ResultadoOperacion EliminarTarea(int id, int usuarioId, bool esAdmin)
         {
             var tarea = _repositorio.ObtenerPorId(id);
-            if (tarea == null) return false;
+            if (tarea == null) return ResultadoOperacion.NoEncontrada;
+            if (!esAdmin && tarea.UsuarioID != usuarioId) return ResultadoOperacion.Prohibida;
 
             _repositorio.Eliminar(tarea);
-            return true;
+            return ResultadoOperacion.Ok;
         }
 
-        public bool ActualizarTarea(int id, TareaDTO dto)
+        public ResultadoOperacion CompletarTarea(int id, int usuarioId, bool esAdmin)
+        {
+            var tarea = _repositorio.ObtenerPorId(id);
+            if (tarea == null) return ResultadoOperacion.NoEncontrada;
+            if (!esAdmin && tarea.UsuarioID != usuarioId) return ResultadoOperacion.Prohibida;
+
+            if (!tarea.CompletarTarea())
+                return ResultadoOperacion.Prohibida;
+
+            _repositorio.Actualizar(tarea);
+            return ResultadoOperacion.Ok;
+        }
+
+        public ResultadoOperacion ReabrirTarea(int id, int usuarioId, bool esAdmin)
+        {
+            var tarea = _repositorio.ObtenerPorId(id);
+            if (tarea == null) return ResultadoOperacion.NoEncontrada;
+            if (!esAdmin && tarea.UsuarioID != usuarioId) return ResultadoOperacion.Prohibida;
+
+            tarea.ReabrirTarea();
+            _repositorio.Actualizar(tarea);
+            return ResultadoOperacion.Ok;
+        }
+
+        public ResultadoOperacion CancelarTarea(int id, string? motivo, int usuarioId, bool esAdmin)
+        {
+            var tarea = _repositorio.ObtenerPorId(id);
+            if (tarea == null) return ResultadoOperacion.NoEncontrada;
+            if (!esAdmin && tarea.UsuarioID != usuarioId) return ResultadoOperacion.Prohibida;
+
+            if (!tarea.CancelarTarea(motivo ?? "Sin motivo"))
+                return ResultadoOperacion.Prohibida;
+
+            _repositorio.Actualizar(tarea);
+            return ResultadoOperacion.Ok;
+        }
+
+        public ResultadoOperacion ActualizarTarea(int id, TareaDTO dto, int usuarioId, bool esAdmin)
         {
             var tareaExistente = _repositorio.ObtenerPorId(id);
-            if (tareaExistente == null) return false;
+            if (tareaExistente == null) return ResultadoOperacion.NoEncontrada;
+            if (!esAdmin && tareaExistente.UsuarioID != usuarioId) return ResultadoOperacion.Prohibida;
 
             tareaExistente.ActualizarDatosCompletos(
                 dto.Titulo,
@@ -98,7 +142,7 @@ namespace GestorTarea.Application.Services
                 dto.FechaLimite);
 
             _repositorio.Actualizar(tareaExistente);
-            return true;
+            return ResultadoOperacion.Ok;
         }
         public bool AgregarTareaDesdeDTO(TareaDTO dto)
         {

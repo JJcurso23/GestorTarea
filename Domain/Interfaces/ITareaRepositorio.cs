@@ -17,5 +17,6 @@ namespace GestorTarea.Domain.Interfaces
         public void Eliminar(Tarea tarea);
 
         public (List<Tarea>, int) ObtenerPaginadas(int pagina, int porPagina, string? estado);
+        public (List<Tarea>, int) ObtenerPaginadasPorUsuario(int pagina, int porPagina, string? estado, int usuarioId);
     }
 }

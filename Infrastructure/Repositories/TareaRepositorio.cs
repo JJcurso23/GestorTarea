@@ -61,5 +61,25 @@ namespace GestorTarea.Infrastructure.Repositories
             return (resultadoFinal, totalRegistros);
 
         }
+
+        public (List<Tarea>, int) ObtenerPaginadasPorUsuario(int pagina, int porPagina, string? estado, int usuarioId)
+        {
+            var consulta = _context.Tareas.Where(t => t.UsuarioID == usuarioId);
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                consulta = consulta.Where(t => t.Estado.ToString() == estado);
+            }
+
+            int totalRegistros = consulta.Count();
+
+            var resultadoFinal = consulta
+                .OrderBy(t => t.ID)
+                .Skip((pagina - 1) * porPagina)
+                .Take(porPagina)
+                .ToList();
+
+            return (resultadoFinal, totalRegistros);
+        }
     }
 }
