@@ -24,14 +24,19 @@ namespace GestorTarea.Domain.Entities
         {
             get
             {
+                // Los estados terminales mandan sobre el cálculo por fecha.
+                if (_estado == EstadoTarea.Completada
+                 || _estado == EstadoTarea.Cancelada)
+                {
+                    return _estado;
+                }
+
                 if (DateTime.Now > DiaVencimiento)
                 {
                     return EstadoTarea.Vencida;
                 }
-                else
-                {
-                    return _estado;
-                }
+
+                return _estado;
             }
             set
             {
@@ -81,7 +86,17 @@ namespace GestorTarea.Domain.Entities
         }
 
         public void IniciarTarea() => Estado = EstadoTarea.EnProgreso;
-        public void ReabrirTarea() => Estado = EstadoTarea.Pendiente;
+
+        public void ReabrirTarea()
+        {
+            _estado = EstadoTarea.Pendiente;
+            // Si la fecha ya pasó, empujamos el vencimiento 7 días para que la tarea
+            // vuelva realmente a estar activa y no recaiga inmediatamente en Vencida.
+            if (DateTime.Now > DiaVencimiento)
+            {
+                DiaVencimiento = DateTime.Now.AddDays(7);
+            }
+        }
 
         public void ActualizarDatosCompletos(string titulo,
             string descrip, DateTime nuevaFecha)

@@ -38,6 +38,13 @@ namespace GestorTarea.Infrastructure.Data
 
                 entity.Property(e => e.UsuarioID).HasColumnName("UsuarioID");
                 entity.Property(e => e.Titulo).HasMaxLength(200).IsRequired();
+
+                // Estado se mapea contra el campo privado _estado para que EF
+                // lea/escriba el valor real y no pase por la lógica del getter
+                // (que puede devolver Vencida y enmascarar Completada/Cancelada).
+                entity.Property(e => e.Estado)
+                      .HasField("_estado")
+                      .UsePropertyAccessMode(PropertyAccessMode.Field);
             });
 
             // 3. Configuración de Usuario (Sincronizado con TablaUsuarios.sql)
